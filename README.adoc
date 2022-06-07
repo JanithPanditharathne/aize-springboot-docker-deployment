@@ -1,0 +1,192 @@
+# AIZE Spring Boot App Deployment
+
+This project demostrating deployment of a Java Spring Boot API an Angular Frontend with nginx.
+
+## Prerequisites
+
+- Docker 18.06.0+ 
+- Docker Compose 3.7
+
+## Create the Environment
+
+### Clone the repository
+
+* Clone the deployment scripts.
++
+[source,shell]
+----
+$ git clone https://github.com/JanithPanditharathne/aize-apringboot-docker-deployment.git
+----
+
+* Clone the project repo.
++
+[source,shell]
+----
+$ cd aize-apringboot-docker-deployment
+----
++
+[source,shell]
+----
+$ git clone https://github.com/aizedevops/spring-boot-projects.git
+----
+
+* Copy files and directories into project directory. 
++
+[source,shell]
+----
+$ cp docker-compose.yml springbootapi.Dockerfile makefile aize-apringboot-docker-deployment
+----
++
+[source,shell]
+----
+$ cp frontend.Dockerfile spring-boot-projects/spring-boot-modules/spring-boot-angular/src/main/js/application
+----
++
+[source,shell]
+----
+$ cp -r nginx spring-boot-projects/spring-boot-modules/spring-boot-angular/src/main/js/application
+----
+
+### Create and Deploy the App
+
+* Build Docker Images
++
+[source,shell]
+----
+$ make build
+----
+
+* Push Created Docker Images into Docker Registry
++
+[source,shell]
+----
+$ make docker-push
+----
+
+* Run Frondtend Application
++
+[source,shell]
+----
+$ make run-frontend
+----
+
+* Run Spring Boot API 
++
+[source,shell]
+----
+$ make run-API
+----
+
+* Access docker logs 
++
+[source,shell]
+----
+$ make docker-logs
+----
+
+* Stop created Docker Containers
++
+[source,shell]
+----
+$ make docker-stop
+----
+
+* Cleanup Docker Environment
++
+[source,shell]
+----
+$ make docker-cleanup
+----
+
+### Build and Deploy Application using Docker Compose
+* Run Docker Compose
++
+[source,shell]
+----
+$ docker compose up -d
+----
+
+### Verify the Deployment
+
+Open browser and use IP address of the server to access the application. for example if docker is running on localhost url shall be `http://localhost`
+
+### Indivitual Docker Commands to Run & Deploy the App
+
+* Build Docker Images
++
+[source,shell]
+----
+$ docker build -t aize-frontend:1.0 .
+----
++
+[source,shell]
+----
+$ docker build -t aize-springapi:1.0 .
+----
+* Run Docker Images
++
+[source,shell]
+----
+$ docker run -d -it -p 80:80/tcp --name aize-frontend aize-frontend:1.0:1.0
+----
++
+[source,shell]
+----
+$ docker run -d -it -p 8080:8080/tcp --name aize-springapi aize-springapi:1.0
+----
+
+### Useful commands
+
+* List images
++
+[source,shell]
+----
+$ docker images
+----
+
+* List running containers
++
+[source,shell]
+----
+$ docker ps
+----
+
+* List all containers both running and stopped
++
+[source,shell]
+----
+$ docker ps -a
+----
+
+* Remove container
++
+[source,shell]
+----
+$ docker rm <container_name>
+----
+NOTE: use `-f` to remove running containers `docker rm -f <container_name>`
+
+* Remove image
++
+[source,shell]
+----
+$ docker rmi <image_name>
+----
+
+* Remove containers and images using docker-compose
++
+[source,shell]
+----
+$ docker-compose down --rmi all
+----
+
+== Reference
+
+- https://docs.docker.com/desktop/linux/install/
+- https://docs.docker.com/compose/install/
+- https://spring.io/guides/gs/spring-boot-docker/
+- https://medium.com/geekculture/docker-basics-and-easy-steps-to-dockerize-spring-boot-application-17608a65f657
+- https://dockerize.io/guides/docker-spring-boot-guide
+- https://dzone.com/articles/how-to-dockerize-angular-app
+- https://medium.com/codex/dockerize-angular-application-69e7503d1816
+

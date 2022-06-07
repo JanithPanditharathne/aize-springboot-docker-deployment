@@ -1,0 +1,41 @@
+version: "3.7"
+services:
+    angular-app:
+        container_name: angular-app
+        image: aize-frontend:1.0
+        init: true
+        restart: on-failure
+        build:
+            dockerfile: frontend.Dockerfile
+            context: ./spring-boot-projects/spring-boot-modules/spring-boot-angular/src/main/js/application
+        networks:
+            - aize-app
+
+    nginx:
+        container_name: angular-app-nginx
+        image: aize-nginx:1.0
+        init: true
+        restart: on-failure
+        build:
+            dockerfile: frontend.Dockerfile
+            context: ./spring-boot-projects/spring-boot-modules/spring-boot-angular/src/main/js/application
+        ports:
+            - "80:80"
+        depends_on:
+            - angular-app
+        networks:
+            - aize-app
+
+    springboot-api:
+        container_name: springboot-api
+        image: aize-springapi:1.0
+        init: true
+        restart: on-failure
+        build:
+            dockerfile: springbootapi.Dockerfile
+            context: .
+        networks:
+            - aize-app
+
+networks:
+    aize-app:
